@@ -8,7 +8,7 @@ from spade.template import Template
 
 import json
 
-TIMEOUT = 100000000
+TIMEOUT = 1000000
 
 _filesExtension = {
     'image': ['png', 'jpg', 'jpeg', 'tiff', 'tif', 'gif', 'svg'],
@@ -128,7 +128,7 @@ class DirectoryAgent(Agent):
 
 
 if __name__ == "__main__":
-    directory = DirectoryAgent("13-10665+6@jabber.at", "operativos3")
+    directory = DirectoryAgent("13-10665@jabber.at", "operativos3")
     directory.start()
 
     while True:
