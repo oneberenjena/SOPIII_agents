@@ -8,7 +8,11 @@ from spade.template import Template
 import json
 
 TIMEOUT = 100000000
+
 DirectoryAddress="13-10665+6@jabber.at"
+
+def cleanSender(sender):
+    return str(sender).split("/")[0]
 
 class PeerAgent(Agent):
     class PeerBehav(CyclicBehaviour):
@@ -28,6 +32,7 @@ class PeerAgent(Agent):
             else:
                 print("############### Invalid Option ###############")
                 print()
+
 
         async def addFileToDirectory(self):
             print("############### Add new file ###############")
@@ -56,7 +61,7 @@ class PeerAgent(Agent):
                 print("list:")
                 for peer in listOfPeers:
                     print("+ {}".format(peer))
-
+                await self.connectWithPeer(title)
                 print("TODO: Get file from peer and inform directory")
             print()
 
@@ -84,9 +89,54 @@ class PeerAgent(Agent):
 
             print()
 
+
+
+        async def connectWithPeer(self,myFile):
+            print("############### Conecting with peer with the file ###############")
+            name = input("Peer Name: ")
+            msg = Message(to=name+"@jabber.at")
+            msg.set_metadata("job", "connectFiles")
+            msg.set_metadata("title", myFile)
+            await self.send(msg)
+
+
+            msg = await self.receive(timeout=TIMEOUT)
+            if msg:
+                print()
+                print("Recived answer")
+                fileAsked = msg.get_metadata("file")
+                print("Files:")
+                print(fileAsked)
+            print()
+
+
+    class PeerTransf(CyclicBehaviour):
+        async def run(self):
+            msg = await self.receive(timeout=TIMEOUT)
+            if msg:
+                title = msg.get_metadata("title")
+                sender = cleanSender(msg.sender)
+
+                print("## REQUEST FOR GETTING A FILE")
+                print("title of asked file: {}".format(title))
+                print("from: {}".format(sender))
+
+                sendFile="Send Files"
+
+                msg = Message(to=sender)
+                msg.set_metadata("job", "connectFiles")
+                msg.set_metadata("title", title)
+                msg.set_metadata("file", sendFile)
+                await self.send(msg)
+            print()
+
+
+
+
     def setup(self):
         print("PeerAgent started")
         peerBehav = self.PeerBehav()
+        peerConnect =self.PeerTransf()
 
         listOfPeersTemp = Template()
         listOfPeersTemp.set_metadata("job", "listOfPeers")
@@ -94,7 +144,12 @@ class PeerAgent(Agent):
 
         listOfFilesTemp = Template()
         listOfFilesTemp.set_metadata("job", "listOfFiles")
-        self.add_behaviour(peerBehav, listOfPeersTemp | listOfFilesTemp)
+
+        connectPeerTemp = Template()
+        connectPeerTemp.set_metadata("job", "connectFiles")
+
+        self.add_behaviour(peerBehav, listOfPeersTemp | listOfFilesTemp |connectPeerTemp)
+        self.add_behaviour(peerConnect, listOfPeersTemp | listOfFilesTemp |connectPeerTemp)
 
 
 if __name__ == "__main__":

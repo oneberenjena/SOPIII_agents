@@ -48,6 +48,7 @@ class DirectoryAgent(Agent):
                 else:
                     self.direc[title] = [sender]
                     print("File added to directory!")
+            print()
 
     class AskFileBehav(CyclicBehaviour):
         def setDirec(self, Dir):
@@ -101,7 +102,7 @@ class DirectoryAgent(Agent):
                 msg.set_metadata("job", "listOfFiles")
                 msg.set_metadata("search", search)
                 msg.set_metadata("files", stringList)
-                print(f"Sending {msg}")
+                # print(f"Sending {msg}")
                 await self.send(msg)
             print()
 
