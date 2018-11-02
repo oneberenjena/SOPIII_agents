@@ -9,7 +9,7 @@ import json
 
 TIMEOUT = 1000000
 
-DirectoryAddress="13-10665+6@jabber.at"
+DirectoryAddress="13-10665@jabber.at"
 
 def cleanSender(sender):
     return str(sender).split("/")[0]
