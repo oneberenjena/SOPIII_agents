@@ -27,7 +27,7 @@ class DirectoryAgent(Agent):
     direc = dict()
 
     class NewFileBehav(CyclicBehaviour):
-        def getDirec(self, Dir):
+        def setDirec(self, Dir):
             self.direc = Dir
 
         async def run(self):
@@ -36,7 +36,7 @@ class DirectoryAgent(Agent):
                 title = msg.get_metadata("title")
                 body = msg.body
                 sender = cleanSender(msg.sender)
-                print("## REQUEST FOR NEW FILE")
+                print("## REQUEST TO ADD NEW FILE")
                 print("title of new file: {}".format(title))
                 print("from: {}".format(sender))
                 print()
@@ -50,7 +50,7 @@ class DirectoryAgent(Agent):
                     print("File added to directory!")
 
     class AskFileBehav(CyclicBehaviour):
-        def getDirec(self, Dir):
+        def setDirec(self, Dir):
             self.direc = Dir
 
         async def run(self):
@@ -77,7 +77,7 @@ class DirectoryAgent(Agent):
             print()
 
     class SearchFilesBehav(CyclicBehaviour):
-        def getDirec(self, Dir):
+        def setDirec(self, Dir):
             self.direc = Dir
 
         def findFilesByNamePart(self, fileNamePart):
@@ -108,26 +108,26 @@ class DirectoryAgent(Agent):
     def setup(self):
         print("Directory started")
         newFBehav = self.NewFileBehav()
-        newFBehav.getDirec(self.direc)
+        newFBehav.setDirec(self.direc)
         newFTemp = Template()
         newFTemp.set_metadata("job", "newFile")
         self.add_behaviour(newFBehav, newFTemp)
 
         askFBehav = self.AskFileBehav()
-        askFBehav.getDirec(self.direc)
+        askFBehav.setDirec(self.direc)
         askFTemp = Template()
         askFTemp.set_metadata("job", "askFile")
         self.add_behaviour(askFBehav, askFTemp)
 
         searchFBehav = self.SearchFilesBehav()
-        searchFBehav.getDirec(self.direc)
+        searchFBehav.setDirec(self.direc)
         searchFTemp = Template()
         searchFTemp.set_metadata("job", "searchFiles")
         self.add_behaviour(searchFBehav, searchFTemp)
 
 
 if __name__ == "__main__":
-    directory = DirectoryAgent("13-10665@jabber.at", "operativos3")
+    directory = DirectoryAgent("13-10665+6@jabber.at", "operativos3")
     directory.start()
 
     while True:

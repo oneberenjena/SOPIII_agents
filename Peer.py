@@ -8,7 +8,7 @@ from spade.template import Template
 import json
 
 TIMEOUT = 100000000
-
+DirectoryAddress="13-10665+6@jabber.at"
 
 class PeerAgent(Agent):
     class PeerBehav(CyclicBehaviour):
@@ -31,7 +31,7 @@ class PeerAgent(Agent):
 
         async def addFileToDirectory(self):
             print("############### Add new file ###############")
-            msg = Message(to="13-10665@jabber.at")
+            msg = Message(to=DirectoryAddress)
             msg.set_metadata("job", "newFile")
             title = input("title: ")
             msg.set_metadata("title", title)
@@ -40,7 +40,7 @@ class PeerAgent(Agent):
 
         async def askFileFromDirectory(self):
             print("############### Ask file ###############")
-            msg = Message(to="13-10665@jabber.at")
+            msg = Message(to=DirectoryAddress)
             msg.set_metadata("job", "askFile")
             title = input("title: ")
             msg.set_metadata("title", title)
@@ -62,7 +62,7 @@ class PeerAgent(Agent):
 
         async def searchFilesInDirectory(self):
             print("############### Search file(s) by name ###############")
-            msg = Message(to="13-10665@jabber.at")
+            msg = Message(to=DirectoryAddress)
             msg.set_metadata("job", "searchFiles")
             search = input("search by: ")
             msg.set_metadata("search", search)
@@ -80,7 +80,7 @@ class PeerAgent(Agent):
                     print(f"+ {file}")
 
                 print()
-                self.askFileFromDirectory()
+                # self.askFileFromDirectory()
 
             print()
 
